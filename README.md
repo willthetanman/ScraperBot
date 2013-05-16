@@ -1,7 +1,7 @@
-tanbot
+ScraperBot
 ======
 
-Tanbot is a Skype chat bot that preforms OSINT on a given IP, Domain or Hash
+ScraperBot is a Skype chat bot that preforms OSINT on a given IP, Domain or Hash
 
 ## Main Dependencies:
 - Skype4Py
@@ -19,8 +19,8 @@ Tanbot is a Skype chat bot that preforms OSINT on a given IP, Domain or Hash
 2. Launch Skype
 3. cd into the directory hosting chatbot
 4. run the chatbot with: python chatbot.py
-5. The skypebot automatically assumes your name, so have somebody send you a message like:   [your name] hello
+5. The skypebot automatically assumes your name, refer to usage below for interaction
 
 ## Usage:
-@tanbot [ipv4, domain, md5hash]
-@tanbot osint [ipv4, domain, md5hash]
+- @[skype_handle] [ipv4, domain, md5hash]
+- @[skype_handle] osint [ipv4, domain, md5hash]
