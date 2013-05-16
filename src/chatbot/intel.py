@@ -432,6 +432,3 @@ def md5Hash(md5):
         returnList.append('[-] MD5 Not Found on VxVault')          
 
     return returnList        
-
-# print md5Hash('d429bf3d8ebeaa5fc09da6250201e5bc')
-# print grab_requests('d429bf3d8ebeaa5fc09da6250201e5bc')
