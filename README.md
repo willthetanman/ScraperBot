@@ -7,11 +7,12 @@ ScraperBot is a Skype chat bot that preforms OSINT on a given IP, Domain or Hash
 - Skype4Py
 
 ## Handler Dependencies:
-- SQLAlchemy (for logging and url handler)
-- Argparse (for message parsing)
-- Httplib2 (For Yelp Lunch Handler)
-- Whoosh (for searching)
-- Pattern (for web searching)
+- sudo easy_install Skype4Py
+- sudo easy_install SQLAlchemy
+- sudo easy_install argparse
+- sudo easy_install httplib2
+- sudo easy_install whoosh
+- sudo easy_install pattern
 
 ## How to run:
 
