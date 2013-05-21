@@ -7,36 +7,31 @@ Intel handler
 
 import httplib2, re, sys, argparse, urllib, urllib2
 import dispatch
-
+   
 @dispatch.handler("ip")
 def ip_handler(params, message=None, *args, **kwargs):
 
 
     if isinstance(params, basestring):
-        # print "Is String" + params
+        # print "Is String " + params
         return "\n".join(grab_requests(params))
         # return grab_requests(params)
 
     else:
-        print params
+        # print params
         ip_address = " ".join(params)
-        print ip_address
+        # print ip_address
         return "\n".join(grab_requests(ip_address))
 
 def grab_requests(input):
 
     input = str(input)
+    input = unsanitize(input)
     rpd7 = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', re.IGNORECASE)
     rpdFind7 = re.findall(rpd7,input)
     rpdSorted7=sorted(rpdFind7)
     rpdSorted7=str(rpdSorted7)
     rpdSorted7=rpdSorted7[2:-2]
-
-    # rpd8 = re.compile('([-a-z0-9A-Z]+\.[-a-z0-9A-Z]*).+', re.IGNORECASE)
-    # rpdFind8 = re.findall(rpd8,input)
-    # rpdSorted8=sorted(rpdFind8)
-    # rpdSorted8=str(rpdSorted8)
-    # rpdSorted8=rpdSorted8[2:-2]
 
     rpd9 = re.compile('[a-fA-F0-9]{32}', re.IGNORECASE)
     rpdFind9 = re.findall(rpd9,input)
@@ -49,21 +44,21 @@ def grab_requests(input):
         print '[*] ' + input + ' is an IP. '
         print '[*] Running IP toolset'
         ipInput = input
-        return robtex(ipInput),ipvoid(ipInput),fortiURL(ipInput),alienvault(ipInput),virustotal(ipInput),threatexpert(ipInput)
+        return ("Results for: " + sanitize(ipInput)),robtex(ipInput),ipvoid(ipInput),fortiURL(ipInput),alienvault(ipInput),virustotal(ipInput),threatexpert(ipInput),malc0de(ipInput)
 
     elif rpdSorted9 == input:
         print '--------------------------------'
         print '[*] ' + input + ' is an MD5 Hash. '
         print '[*] Running MD5 Hash Toolset'
         md5 = input
-        return md5Hash(md5)
+        return  ("Results for: " + md5), md5Hash(md5)
 
     else:
         print '--------------------------------'
         print '[*] ' + input + ' is a URL.  '
         print '[*] Running URL toolset'
         urlInput = input
-        return urlvoid(urlInput), fortiURL(urlInput), threatexpert(urlInput)
+        return ("Results for: " + sanitize(urlInput), urlvoid(urlInput), fortiURL(urlInput), threatexpert(urlInput), malc0de(urlInput))
 
 def alienvault(ipInput):
     url = "http://labs.alienvault.com/labs/index.php/projects/open-source-ip-reputation-portal/information-about-ip/?ip=" + ipInput   
@@ -80,6 +75,16 @@ def alienvault(ipInput):
         return ('[+] IP is listed in AlienVault IP reputation database at ' + url)
     else:
         return ('[-] IP is not listed in AlienVault IP reputation database')
+
+def sanitize(unsanitized):
+    unsanitized = str(unsanitized)
+    sanitized = unsanitized.replace('.','[.]')
+    return sanitized             
+
+def unsanitize(sanitized):
+    sanitized = str(sanitized)
+    unsanitize = sanitized.replace('[.]','.')
+    return unsanitize        
    
 
 def virustotal(ipInput):
@@ -167,8 +172,9 @@ def ipvoid(ipInput):
         returnList = []
     
         j=''
+        returnList.append('[+] Host is listed in blacklist at ')
         for j in rpdSorted2:
-            returnList.append('[+] Host is listed in blacklist at '+ j)
+            returnList.append(j)
         if j=='':
             returnList.append('[-] IP is not listed in a blacklist')
        
@@ -212,8 +218,9 @@ def ipvoid(ipInput):
         returnList = []
     
         j=''
+        returnList.append('[+] Host is listed in blacklist at ')
         for j in rpdSorted2:
-            returnList.append('[+] Host is listed in blacklist at '+ j)
+            returnList.append(j)
         if j=='':
             return('[-] IP is not listed in a blacklist')
        
@@ -270,9 +277,11 @@ def urlvoid(url):
         rpdFind1 = re.findall(rpd1,contentString)
         rpdSorted1=sorted(rpdFind1) 
         
-        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,50})\"\stitle', re.IGNORECASE)
+        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,150})\"\stitle', re.IGNORECASE)
         rpdFind2 = re.findall(rpd2,contentString)
+        # print rpdFind2
         rpdSorted2=sorted(rpdFind2)   
+        # print rpdSorted2
 
         rpd3 = re.compile('latitude\s\/\slongitude.+\<td\>(.+)\<\/td\>', re.IGNORECASE)
         rpdFind3 = re.findall(rpd3,contentString)
@@ -295,8 +304,10 @@ def urlvoid(url):
             returnList.append('[-] IP is not listed')
         
         j=''
+        returnList.append('[+] Host is listed in blacklist at ')
         for j in rpdSorted2:
-            returnList.append('[+] Host is listed in blacklist at '+ j)
+            # returnList.append('[+] Host is listed in blacklist at '+ j)
+            returnList.append(j)
         if j=='':
             returnList.append('[-] IP is not listed in a blacklist')
        
@@ -334,7 +345,7 @@ def urlvoid(url):
         rpdFind1 = re.findall(rpd1,contentString)
         rpdSorted1=sorted(rpdFind1) 
         
-        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,50})\"\stitle', re.IGNORECASE)
+        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,150})\"\stitle', re.IGNORECASE)
         rpdFind2 = re.findall(rpd2,contentString)
         rpdSorted2=sorted(rpdFind2)   
 
@@ -359,8 +370,9 @@ def urlvoid(url):
             return('[-] IP is not listed')
         
         j=''
+        returnList.append('[+] Host is listed in blacklist at ')
         for j in rpdSorted2:
-            returnList.append('[+] Host is listed in blacklist at '+ j)
+            returnList.append(j)
         if j=='':
             return('[-] IP is not listed in a blacklist')
        
@@ -413,6 +425,13 @@ def md5Hash(md5):
     rpd3 = re.compile('\d{4}\-\d{2}\-\d{2}')
     rpdFind3 = re.findall(rpd3,contentString3)
 
+    url4 = "http://malc0de.com/database/index.php?search=" +  md5
+    response4 = opener.open(url4)
+    content4 = response4.read()
+    contentString4 = str(content4)      
+    rpd4 = re.compile('yielded no results')
+    rpdFind4 = re.findall(rpd4,contentString4)
+
     returnList = []
     
     # print results of hash findings
@@ -429,6 +448,28 @@ def md5Hash(md5):
     if rpdFind3:
         returnList.append('[+] MD5 last scanned on ' + str(rpdFind3[0]) + ' at ' + url3)
     else:
-        returnList.append('[-] MD5 Not Found on VxVault')          
+        returnList.append('[-] MD5 Not Found on VxVault')     
+    
+    if not rpdFind4:
+        returnList.append("[+] MD5 found on malc0de's database" + url4)
+    else:
+        returnList.append('[-] MD5 Not Found on Malc0de')                  
 
-    return returnList        
+    return '\n'.join(returnList)
+
+def malc0de(searchInput):
+    url = "http://malc0de.com/database/index.php?search=" +  searchInput
+    proxy = urllib2.ProxyHandler()
+    opener = urllib2.build_opener(proxy)
+    response = opener.open(url) 
+    content = response.read()
+    contentString = str(content)
+
+    rpd = re.compile('yielded no results')
+    rpdFind = re.findall(rpd,contentString)
+
+    if not rpdFind:
+        searchInput = sanitize(searchInput)
+        return ('[+] ' + searchInput + " found listed in malc0de's database at " + url)
+    else:
+        return ("[-] No submissions found in malc0de's database")

@@ -42,17 +42,20 @@ def parse_message(content):
 def parse_command_check(content):
 
     content = str(content)
+    content = unsanitize(content)
+
     rpd7 = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', re.IGNORECASE)
     rpdFind7 = re.findall(rpd7,content)
     rpdSorted7=sorted(rpdFind7)
     rpdSorted7=str(rpdSorted7)
     rpdSorted7=rpdSorted7[2:-2]
 
-    rpd8 = re.compile('(.+\.)?([^.]+)\.\w{2,6}$', re.IGNORECASE)
-    rpdFind8 = re.findall(rpd8,content)
-    rpdSorted8=sorted(rpdFind8)
-    rpdSorted8=str(rpdSorted8)
-    rpdSorted8=rpdSorted8[2:-2]
+    rpd8 = re.compile('(.[^\s]+\.)?([^.,\s,\,]+)\.[a-zA-Z]{2,6}$', re.IGNORECASE)
+    rpdFind8 = re.match(rpd8,content)
+    # print rpdFind8
+    # rpdSorted8=sorted(rpdFind8)
+    # rpdSorted8=str(rpdSorted8)
+    # rpdSorted8=rpdSorted8[2:-2]
 
     rpd9 = re.compile('[a-fA-F0-9]{32}', re.IGNORECASE)
     rpdFind9 = re.findall(rpd9,content)
@@ -65,15 +68,29 @@ def parse_command_check(content):
         # print 'Parse Check: ' + content + ' is an IP. '
         return True
 
+    elif rpdFind8:
+        # print '--------------------------------'
+        # print 'Parse Check: ' + content + ' is a URL.  '
+        return True
+
     elif rpdSorted9 == content:
         # print '--------------------------------'
         # print 'Parse Check: ' + content + ' is an MD5 Hash. '
         return True
 
-    elif rpdSorted8 == content:
-        # print '--------------------------------'
-        # print 'Parse Check: ' + content + ' is a URL.  '
-        return True
-
     else:
         return False
+
+def sanitize(unsanitized):
+    unsanitized = str(unsanitized)
+    sanitized = unsanitized.replace('.','[.]')
+    return sanitized             
+
+def unsanitize(sanitized):
+    sanitized = str(sanitized)
+    unsanitize = sanitized.replace('[.]','.')
+    return unsanitize            
+
+# print parse_command_check("gew.gwe.gwe.g.ew.ggoogle.com")
+
+# print unsanitize("kobe8.co[.]uk")

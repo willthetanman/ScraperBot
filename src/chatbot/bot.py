@@ -163,17 +163,22 @@ class Bot(object):
         parsed_body = body.split()
         parsed_body[0] = self.get_name()  # Replacing any alias names with original skype handle to ensure parsing works
         body = ' '.join(parsed_body)
-        
         command_string = body[len(self.get_name()):]
         command_string = command_string.strip()
-        command, arguments = chatbot.parse.parse_command(command_string)
-        command = str(command)
 
-        if chatbot.parse.parse_command_check(command) == True:
-            arguments = command
-            return self.dispatch_command("ip", arguments, message=message, bot=self)
-        else:
+        if chatbot.parse.parse_command_check(command_string) == True:
+            print 'Passed Check'
+            arguments = command_string.split()
+            command = 'ip'
             return self.dispatch_command(command, arguments, message=message, bot=self)
+
+        else:
+            command, arguments = chatbot.parse.parse_command(command_string)
+            command = str(command)
+            print command
+            print arguments
+            return self.dispatch_command(command, arguments, message=message, bot=self)    
+       
 
     def process_message(self, message):
         result = chatbot.dispatch.dispatch_to_handlers("__message__", message=message, bot=self)
@@ -190,7 +195,15 @@ class Bot(object):
     def dispatch_command(self, command, *args, **kwargs):
         return chatbot.dispatch.dispatch_to_handlers(command, *args, **kwargs)
 
+    def sanitize(unsanitized):
+        unsanitized = str(unsanitized)
+        sanitized = unsanitized.replace('.','[.]')
+        return sanitized             
     
+    def unsanitize(sanitized):
+        sanitized = str(sanitized)
+        unsanitize = sanitized.replace('[.]','.')
+        return unsanitize
     
 if __name__ == "__main__":
     pass
