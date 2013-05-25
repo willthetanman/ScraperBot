@@ -172,9 +172,10 @@ def ipvoid(ipInput):
         returnList = []
     
         j=''
-        returnList.append('[+] Host is listed in blacklist at ')
-        for j in rpdSorted2:
-            returnList.append(j)
+        if rpdSorted2:
+            returnList.append('[+] Host is listed in blacklist at ')
+            for j in rpdSorted2:
+                returnList.append(j)
         if j=='':
             returnList.append('[-] IP is not listed in a blacklist')
        
@@ -218,9 +219,10 @@ def ipvoid(ipInput):
         returnList = []
     
         j=''
-        returnList.append('[+] Host is listed in blacklist at ')
-        for j in rpdSorted2:
-            returnList.append(j)
+        if rpdSorted2:
+            returnList.append('[+] Host is listed in blacklist at ')
+            for j in rpdSorted2:
+                returnList.append(j)
         if j=='':
             return('[-] IP is not listed in a blacklist')
        
@@ -277,7 +279,7 @@ def urlvoid(url):
         rpdFind1 = re.findall(rpd1,contentString)
         rpdSorted1=sorted(rpdFind1) 
         
-        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,150})\"\stitle', re.IGNORECASE)
+        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,100})\"\stitle', re.IGNORECASE)
         rpdFind2 = re.findall(rpd2,contentString)
         # print rpdFind2
         rpdSorted2=sorted(rpdFind2)   
@@ -304,10 +306,11 @@ def urlvoid(url):
             returnList.append('[-] IP is not listed')
         
         j=''
-        returnList.append('[+] Host is listed in blacklist at ')
-        for j in rpdSorted2:
-            # returnList.append('[+] Host is listed in blacklist at '+ j)
-            returnList.append(j)
+        if rpdSorted2:
+            returnList.append('[+] Host is listed in blacklist at ')
+            for j in rpdSorted2:
+                # returnList.append('[+] Host is listed in blacklist at '+ j)
+                returnList.append(j)
         if j=='':
             returnList.append('[-] IP is not listed in a blacklist')
        
@@ -345,7 +348,7 @@ def urlvoid(url):
         rpdFind1 = re.findall(rpd1,contentString)
         rpdSorted1=sorted(rpdFind1) 
         
-        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,150})\"\stitle', re.IGNORECASE)
+        rpd2 = re.compile('DETECTED.{25,40}href\=\"(.{10,100})\"\stitle', re.IGNORECASE)
         rpdFind2 = re.findall(rpd2,contentString)
         rpdSorted2=sorted(rpdFind2)   
 
@@ -370,9 +373,10 @@ def urlvoid(url):
             return('[-] IP is not listed')
         
         j=''
-        returnList.append('[+] Host is listed in blacklist at ')
-        for j in rpdSorted2:
-            returnList.append(j)
+        if rpdSorted2:
+            returnList.append('[+] Host is listed in blacklist at ')
+            for j in rpdSorted2:
+                returnList.append(j)
         if j=='':
             return('[-] IP is not listed in a blacklist')
        

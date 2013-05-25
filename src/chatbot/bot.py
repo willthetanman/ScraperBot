@@ -28,7 +28,10 @@ INVALID_RESPONSES = ("no.",
                      "i can't understand your jabber.",
                      "forgettaboutit.",
                      "leave me alone.",
-                     "i'm ignoring you...")
+                     "i'm ignoring you...",
+                     "it can only be attributable to human error.",
+                     "I'm sorry, I'm afraid I can't do that.",
+                     )
 
 AFFIRMATIVE_COUNT = 27
 
@@ -137,7 +140,7 @@ class Bot(object):
 
     def message_received(self, message):
         try:
-            if (message.Body.lower().startswith("{0} ".format(self.get_name())) or message.Body.lower().startswith('@tanbot') or message.Body.lower().startswith('@tbot')):
+            if (message.Body.lower().startswith("{0} ".format(self.get_name())) or message.Body.lower().startswith('@tanbot') or message.Body.lower().startswith('@tbot') or message.Body.lower().startswith('@osint')):
                 result = self.process_command(message)
                 if not result:                    
                     result = self.get_random_negative_response()
@@ -167,7 +170,7 @@ class Bot(object):
         command_string = command_string.strip()
 
         if chatbot.parse.parse_command_check(command_string) == True:
-            print 'Passed Check'
+            # print 'Passed Check'
             arguments = command_string.split()
             command = 'ip'
             return self.dispatch_command(command, arguments, message=message, bot=self)
@@ -175,8 +178,8 @@ class Bot(object):
         else:
             command, arguments = chatbot.parse.parse_command(command_string)
             command = str(command)
-            print command
-            print arguments
+            # print command
+            # print arguments
             return self.dispatch_command(command, arguments, message=message, bot=self)    
        
 
@@ -186,8 +189,8 @@ class Bot(object):
         if not result:
             self.count += 1
             
-            if self.count % AFFIRMATIVE_COUNT == 0:
-                result = self.get_random_positive_response()
+            # if self.count % AFFIRMATIVE_COUNT == 0:
+            #     result = self.get_random_positive_response()
         
         return result
     
